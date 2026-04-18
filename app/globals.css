@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* =============================================================================
+   PCA Design System v1.0
+   Operations platform — HQ desktop + Field mobile
+   ============================================================================= */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand */
+  --color-pca-green:       #6CA739;
+  --color-pca-green-dark:  #4E7D27;
+  --color-pca-green-light: #8FC159;
+  --color-pca-yellow:      #F2D900;
+  --color-pca-yellow-dark: #D4BE00;
+
+  /* Ink neutrals */
+  --color-ink-900: #14190E;
+  --color-ink-800: #1F2A18;
+  --color-ink-700: #3A4A2E;
+  --color-ink-600: #5A6B4E;
+  --color-ink-500: #7A8970;
+  --color-ink-400: #A3AE9A;
+  --color-ink-300: #C8CFC1;
+  --color-ink-200: #E4E7DF;
+  --color-ink-100: #F1F3ED;
+  --color-ink-50:  #F8F9F5;
+
+  /* Status */
+  --color-status-ok:    #4E9B3C;
+  --color-status-warn:  #E8A42C;
+  --color-status-error: #C94A3C;
+  --color-status-info:  #3F7FB3;
+
+  /* Typography */
+  --font-sans: var(--font-inter-tight), 'Inter Tight', sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+
+  /* Border radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Base */
+html { height: 100%; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F1F3ED; /* ink-100 */
+  color: #14190E;            /* ink-900 */
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
