@@ -29,7 +29,7 @@
 
 | Step | Description |
 |---|---|
-| Step 3 | Root `middleware.ts` — wire up `updateSession` from `lib/supabase/middleware.ts`. Currently the helper exists but no root middleware imports it — auth protection is NOT active. |
+| Step 3 | `proxy.ts` (Next.js 16 equivalent of `middleware.ts`) — wires `updateSession` into the request pipeline. Auth protection active: unauthenticated requests to protected routes → 307 → /login. | ✅ Complete |
 | Step 4 | Invitations schema — invite tokens, accept flow, org-creation flow for new users |
 | Step 5 | Role-check utilities — `requireRole` (server action helper) and `hasRole` (component helper) in `lib/auth/roles.ts` |
 
