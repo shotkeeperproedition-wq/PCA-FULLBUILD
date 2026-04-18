@@ -30,7 +30,7 @@
 | Step | Description |
 |---|---|
 | Step 3 | `proxy.ts` (Next.js 16 equivalent of `middleware.ts`) — wires `updateSession` into the request pipeline. Auth protection active: unauthenticated requests to protected routes → 307 → /login. | ✅ Complete |
-| Step 4 | Invitations schema — invite tokens, accept flow, org-creation flow for new users |
+| Step 4 | `20260418110000_invitations.sql` — invitations table + RLS + 4 server actions (create, lookup by token, accept, list). Service role client at `lib/supabase/admin.ts`. | ✅ Complete |
 | Step 5 | Role-check utilities — `requireRole` (server action helper) and `hasRole` (component helper) in `lib/auth/roles.ts` |
 
 ### Manual step still required
