@@ -31,7 +31,7 @@
 |---|---|
 | Step 3 | `proxy.ts` (Next.js 16 equivalent of `middleware.ts`) — wires `updateSession` into the request pipeline. Auth protection active: unauthenticated requests to protected routes → 307 → /login. | ✅ Complete |
 | Step 4 | `20260418110000_invitations.sql` — invitations table + RLS + 4 server actions (create, lookup by token, accept, list). Service role client at `lib/supabase/admin.ts`. | ✅ Complete |
-| Step 5 | Role-check utilities — `requireRole` (server action helper) and `hasRole` (component helper) in `lib/auth/roles.ts` |
+| Step 5 | `lib/auth/roles.ts` — `requireRole` (async server guard), `hasRole` (sync null-safe helper), `ROLES` constants. All inline role arrays removed from codebase. | ✅ Complete |
 
 ### Manual step still required
 
@@ -272,7 +272,7 @@ When a truck visits multiple job sites in one day:
 
 | # | Module | Phase | Status |
 |---|---|---|---|
-| 1 | Foundation — auth, tenancy, RBAC | Phase 1 | In progress — Steps 1 & 2 complete, Steps 3–5 remain |
+| 1 | Foundation — auth, tenancy, RBAC | Phase 1 | ✅ Complete |
 | 2 | Worker profiles | Phase 2 | Not started |
 | 3 | Skills & tickets matrix | Phase 2 | Not started |
 | 4 | Clients & projects | Phase 3 | Not started |
@@ -416,7 +416,7 @@ NEXT_PUBLIC_APP_URL=
 **Boilerplate:** Next.js App Router + Supabase SSR (custom — MakerKit removed)
 **Database:** Supabase — Sydney (ap-southeast-2), project ref: `yevnpnnapjsrucndabnu`
 **Hosting:** Vercel — syd1 region (deployment protection active — test locally via `npm run dev`)
-**Phase:** 1 — Foundation in progress
+**Phase:** 2 — Worker Profiles
 
 Update this section at the start of each module as work progresses.
 
