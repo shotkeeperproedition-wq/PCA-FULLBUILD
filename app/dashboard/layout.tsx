@@ -1,21 +1,19 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import type { Database } from '@/lib/types/database'
-
-type UserRole = Database['public']['Enums']['user_role']
+import { ROLES, type UserRole } from '@/lib/auth/roles'
 
 // ---------------------------------------------------------------------------
 // Nav definition — roles that can see each link
 // ---------------------------------------------------------------------------
 const NAV_ITEMS = [
-  { href: '/dashboard',         label: 'Dashboard', icon: '▦', roles: ['worker', 'supervisor', 'resource_manager', 'finance', 'director'] as UserRole[] },
-  { href: '/dashboard/workers', label: 'Workers',   icon: '◎', roles: ['resource_manager', 'finance', 'director'] as UserRole[] },
-  { href: '/dashboard/jobs',    label: 'Jobs',      icon: '⊡', roles: ['worker', 'supervisor', 'resource_manager', 'finance', 'director'] as UserRole[] },
-  { href: '/dashboard/schedule',label: 'Schedule',  icon: '▦', roles: ['resource_manager', 'finance', 'director'] as UserRole[] },
-  { href: '/dashboard/plant',   label: 'Plant',     icon: '◈', roles: ['resource_manager', 'finance', 'director'] as UserRole[] },
-  { href: '/dashboard/billing', label: 'Billing',   icon: '◇', roles: ['finance', 'director'] as UserRole[] },
-  { href: '/dashboard/settings',label: 'Settings',  icon: '⚙', roles: ['director'] as UserRole[] },
+  { href: '/dashboard',          label: 'Dashboard', icon: '▦', roles: ROLES.ALL },
+  { href: '/dashboard/workers',  label: 'Workers',   icon: '◎', roles: ROLES.OPERATIONS },
+  { href: '/dashboard/jobs',     label: 'Jobs',      icon: '⊡', roles: ROLES.ALL },
+  { href: '/dashboard/schedule', label: 'Schedule',  icon: '▦', roles: ROLES.OPERATIONS },
+  { href: '/dashboard/plant',    label: 'Plant',     icon: '◈', roles: ROLES.OPERATIONS },
+  { href: '/dashboard/billing',  label: 'Billing',   icon: '◇', roles: ROLES.FINANCE },
+  { href: '/dashboard/settings', label: 'Settings',  icon: '⚙', roles: ROLES.DIRECTOR },
 ]
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -32,7 +30,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .single()
 
   const role: UserRole = membership?.role ?? 'worker'
-  const visibleNav = NAV_ITEMS.filter(item => item.roles.includes(role))
+  const visibleNav = NAV_ITEMS.filter(item => (item.roles as string[]).includes(role))
 
   return (
     <div className="flex h-screen overflow-hidden bg-ink-100">
@@ -41,13 +39,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <aside className="hidden md:flex md:flex-col md:w-60 bg-ink-900 shrink-0">
         {/* Logo */}
         <div className="flex items-center gap-3 px-5 py-5 border-b border-ink-800">
-          {/* Geometric P mark */}
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-            <polygon points="4,4 16,4 20,8 8,8"   fill="#6CA739" />
-            <polygon points="4,4 8,8 8,24 4,20"   fill="#6CA739" />
+            <polygon points="4,4 16,4 20,8 8,8"          fill="#6CA739" />
+            <polygon points="4,4 8,8 8,24 4,20"          fill="#6CA739" />
             <polygon points="4,4 16,4 16,8 8,8 8,16 4,16" fill="#F2D900" />
-            <polygon points="8,8 20,8 20,16 8,16"  fill="#6CA739" opacity="0.7" />
-            <polygon points="4,20 8,24 20,24 16,20" fill="#6CA739" />
+            <polygon points="8,8 20,8 20,16 8,16"         fill="#6CA739" opacity="0.7" />
+            <polygon points="4,20 8,24 20,24 16,20"       fill="#6CA739" />
           </svg>
           <div>
             <p className="text-white text-sm font-semibold leading-tight">Premier</p>

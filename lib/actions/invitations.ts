@@ -3,11 +3,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import type { Database } from '@/lib/types/database'
+import { requireRole, ROLES, type UserRole } from '@/lib/auth/roles'
 
-type UserRole = Database['public']['Enums']['user_role']
 type Invitation = Database['public']['Tables']['invitations']['Row']
-
-const INVITE_ROLES: UserRole[] = ['resource_manager', 'finance', 'director']
 
 // ---------------------------------------------------------------------------
 // createInvitation
@@ -19,21 +17,13 @@ export async function createInvitation(
   role: UserRole
 ): Promise<{ data: { token: string } | null; error: string | null }> {
   const supabase = await createClient()
-
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { data: null, error: 'Not authenticated' }
 
-  // Get caller's active membership to check role and tenant
-  const { data: membership } = await supabase
-    .from('memberships')
-    .select('role, tenant_id')
-    .eq('user_id', user.id)
-    .eq('is_active_tenant', true)
-    .is('deleted_at', null)
-    .single()
-
-  if (!membership) return { data: null, error: 'No active organisation' }
-  if (!INVITE_ROLES.includes(membership.role)) {
+  let membership
+  try {
+    membership = await requireRole(user.id, ROLES.OPERATIONS)
+  } catch {
     return { data: null, error: 'Insufficient permissions to send invitations' }
   }
 
@@ -52,7 +42,6 @@ export async function createInvitation(
     .single()
 
   if (error) {
-    // Unique index violation = pending invite already exists
     if (error.code === '23505') {
       return { data: null, error: 'A pending invitation for that email already exists' }
     }
@@ -90,8 +79,7 @@ export async function getInvitationByToken(
 // ---------------------------------------------------------------------------
 // acceptInvitation
 // Must be called by an authenticated user. Validates the token, inserts into
-// memberships, and marks the invitation accepted. All in one admin transaction
-// so partial failures can't leave the user in a broken state.
+// memberships, and marks the invitation accepted.
 // ---------------------------------------------------------------------------
 export async function acceptInvitation(
   token: string
@@ -105,7 +93,6 @@ export async function acceptInvitation(
 
   const admin = createAdminClient()
 
-  // Insert membership — if user already belongs to this org, return an error
   const { error: membershipError } = await admin
     .from('memberships')
     .insert({
@@ -125,7 +112,6 @@ export async function acceptInvitation(
     return { data: null, error: membershipError.message }
   }
 
-  // Mark invite accepted
   await admin
     .from('invitations')
     .update({ accepted_at: new Date().toISOString(), updated_by: user.id })
@@ -144,7 +130,6 @@ export async function listInvitations(): Promise<{
   error: string | null
 }> {
   const supabase = await createClient()
-
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { data: null, error: 'Not authenticated' }
 

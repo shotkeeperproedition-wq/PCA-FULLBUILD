@@ -1,7 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { Database } from '@/lib/types/database'
-
-type UserRole = Database['public']['Enums']['user_role']
+import { ROLES, hasRole, type UserRole } from '@/lib/auth/roles'
 
 function greeting() {
   const h = new Date().getHours()
@@ -15,8 +13,6 @@ function todayLabel() {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   })
 }
-
-const FINANCIAL_ROLES: UserRole[] = ['finance', 'director']
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -35,7 +31,7 @@ export default async function DashboardPage() {
     ?? user?.email?.split('@')[0]
     ?? 'there'
 
-  const showFinancial = FINANCIAL_ROLES.includes(role)
+  const showFinancial = hasRole({ role }, ROLES.FINANCE)
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
