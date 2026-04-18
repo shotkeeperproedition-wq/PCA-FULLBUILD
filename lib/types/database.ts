@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      agencies: {
+        Row: {
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          id: string
+          name: string
+          tenant_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          name: string
+          tenant_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          name?: string
+          tenant_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agencies_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           accepted_at: string | null
@@ -168,6 +218,120 @@ export type Database = {
         }
         Relationships: []
       }
+      workers: {
+        Row: {
+          abn: string | null
+          address: string | null
+          agency_id: string | null
+          avatar_url: string | null
+          charge_out_rate: number | null
+          cost_rate: number | null
+          created_at: string
+          created_by: string | null
+          date_of_birth: string | null
+          deleted_at: string | null
+          email: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          employment_type: Database["public"]["Enums"]["employment_type"]
+          first_name: string
+          id: string
+          last_name: string
+          linked_user_id: string | null
+          mobile: string | null
+          postcode: string | null
+          preferred_name: string | null
+          state: string | null
+          status: Database["public"]["Enums"]["worker_status"]
+          suburb: string | null
+          super_fund: string | null
+          super_member_number: string | null
+          tenant_id: string
+          tfn_provided: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          abn?: string | null
+          address?: string | null
+          agency_id?: string | null
+          avatar_url?: string | null
+          charge_out_rate?: number | null
+          cost_rate?: number | null
+          created_at?: string
+          created_by?: string | null
+          date_of_birth?: string | null
+          deleted_at?: string | null
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          employment_type: Database["public"]["Enums"]["employment_type"]
+          first_name: string
+          id?: string
+          last_name: string
+          linked_user_id?: string | null
+          mobile?: string | null
+          postcode?: string | null
+          preferred_name?: string | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["worker_status"]
+          suburb?: string | null
+          super_fund?: string | null
+          super_member_number?: string | null
+          tenant_id: string
+          tfn_provided?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          abn?: string | null
+          address?: string | null
+          agency_id?: string | null
+          avatar_url?: string | null
+          charge_out_rate?: number | null
+          cost_rate?: number | null
+          created_at?: string
+          created_by?: string | null
+          date_of_birth?: string | null
+          deleted_at?: string | null
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          employment_type?: Database["public"]["Enums"]["employment_type"]
+          first_name?: string
+          id?: string
+          last_name?: string
+          linked_user_id?: string | null
+          mobile?: string | null
+          postcode?: string | null
+          preferred_name?: string | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["worker_status"]
+          suburb?: string | null
+          super_fund?: string | null
+          super_member_number?: string | null
+          tenant_id?: string
+          tfn_provided?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workers_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -177,12 +341,14 @@ export type Database = {
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
     }
     Enums: {
+      employment_type: "full_time" | "casual" | "agency" | "pty_ltd"
       user_role:
         | "worker"
         | "supervisor"
         | "resource_manager"
         | "finance"
         | "director"
+      worker_status: "active" | "inactive" | "suspended"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -310,6 +476,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      employment_type: ["full_time", "casual", "agency", "pty_ltd"],
       user_role: [
         "worker",
         "supervisor",
@@ -317,6 +484,7 @@ export const Constants = {
         "finance",
         "director",
       ],
+      worker_status: ["active", "inactive", "suspended"],
     },
   },
 } as const
