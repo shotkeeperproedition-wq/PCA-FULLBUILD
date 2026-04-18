@@ -41,6 +41,29 @@ Without this, no JWT will contain `tenant_id` or `role`.
 
 ---
 
+## Module 2 Status — Worker Profiles
+
+**Phase:** 2 — In progress
+**Last updated:** 2026-04-18
+
+### What is complete
+
+| Step | Description | Status |
+|---|---|---|
+| Step 1 | `20260418120000_workers.sql` — agencies table, workers table, employment_type + worker_status enums, indexes, RLS. Applied remote. | ✅ Complete |
+| Step 2 | `lib/types/database.ts` regenerated — employment_type, worker_status enums and workers/agencies row types available | ✅ Complete |
+| Step 3 | `lib/actions/workers.ts` — listWorkers, getWorker, createWorker, updateWorker, archiveWorker. Rate field security: cost_rate/charge_out_rate excluded from query for worker/supervisor roles | ✅ Complete |
+
+### What remains
+
+| Step | Description |
+|---|---|
+| Step 4 | Workers list page — `app/dashboard/workers/page.tsx`. Table with search/filter, role-gated rate columns. |
+| Step 5 | Worker detail/edit form — `app/dashboard/workers/[id]/page.tsx`. Full profile, avatar upload, archive action. |
+| Step 6 | Create worker form — `app/dashboard/workers/new/page.tsx`. |
+
+---
+
 ## What we are building
 
 A vertical SaaS platform for the Australian construction industry. It manages labour hire, wet plant hire (cranes and trucks), and contract works. It is being built first for Premier Constructions, then commercialised and sold to other Australian construction companies.
@@ -273,7 +296,7 @@ When a truck visits multiple job sites in one day:
 | # | Module | Phase | Status |
 |---|---|---|---|
 | 1 | Foundation — auth, tenancy, RBAC | Phase 1 | ✅ Complete |
-| 2 | Worker profiles | Phase 2 | Not started |
+| 2 | Worker profiles | Phase 2 | 🔄 In progress — migration + server actions done, UI pending |
 | 3 | Skills & tickets matrix | Phase 2 | Not started |
 | 4 | Clients & projects | Phase 3 | Not started |
 | 5 | Plant & fleet | Phase 3 | Not started |
